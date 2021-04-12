@@ -1,14 +1,14 @@
 import Foundation
 import SpriteKit
 
-public class Material: SKNode {
+public class MaterialNode: SKNode {
 
     private var pickaxeTextures: [SKTexture] = []
     private var pickaxe = SKSpriteNode()
     private var material = SKSpriteNode()
     private var nodeName: String = ""
     
-    public init(nodeName: String, size: CGSize, position: CGPoint) {
+    public init(nodeName: String, size: CGSize, position: CGPoint, physicBody: Bool = true) {
         super.init()
         
         self.nodeName = nodeName
@@ -28,9 +28,12 @@ public class Material: SKNode {
         material.size = size
         material.zPosition = 1
         material.isUserInteractionEnabled = true
-        material.physicsBody = SKPhysicsBody(rectangleOf: material.size)
-        material.physicsBody?.affectedByGravity = false
-        material.physicsBody!.contactTestBitMask = material.physicsBody!.collisionBitMask
+        if(physicBody) {
+            material.physicsBody = SKPhysicsBody(rectangleOf: material.size)
+            material.physicsBody?.affectedByGravity = false
+            material.physicsBody!.contactTestBitMask = material.physicsBody!.collisionBitMask
+            material.physicsBody?.affectedByGravity = false
+        }
         addChild(material)
     }
     
@@ -60,6 +63,7 @@ public class Material: SKNode {
     
     public func transformToMaterial() {
         material.isUserInteractionEnabled = false
+        material.zPosition = 3
         material.name = "\(nodeName)Material"
         material.texture = SKTexture(imageNamed: "\(nodeName)Material")
         material.size = CGSize(width: 30, height: 20)

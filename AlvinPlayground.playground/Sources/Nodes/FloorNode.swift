@@ -1,7 +1,7 @@
 import Foundation
 import SpriteKit
 
-public class Floor: SKNode {
+public class FloorNode: SKNode {
     
     public init(size: CGSize) {
         super.init()

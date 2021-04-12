@@ -1,7 +1,7 @@
 import Foundation
 import SpriteKit
 
-public class Player: SKNode {
+public class PlayerNode: SKNode {
     
     private var playerWalkTextures: [SKTexture] = []
     private var playerJumpTextures: [SKTexture] = []
@@ -16,6 +16,7 @@ public class Player: SKNode {
         player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
         player.physicsBody?.affectedByGravity = true
         player.physicsBody!.contactTestBitMask = player.physicsBody!.collisionBitMask
+        player.zPosition = 15
         addChild(player)
         
         for i in 1...5 {

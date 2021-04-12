@@ -139,6 +139,7 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
         
         descTextView.backgroundColor = .lightGray
         descTextView.isEditable = false
+        descTextView.textAlignment = .justified
         self.addSubview(descTextView)
         descTextView.topAnchor.constraint(equalTo: imageViewContainer.bottomAnchor, constant: 20).isActive = true
         descTextView.leadingAnchor.constraint(equalTo: collectionViewContainer.trailingAnchor, constant: 20).isActive = true
@@ -154,12 +155,17 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
     }
     
     func selectItem() {
-        imageView.image = UIImage(named: inventory[0])
-        nameLabel.text = "Lithium"
-        symbolLabel.text = "Symbol: Li"
-        atomicNumLabel.text = "Atomic Number: 3"
-        atomicMassLabel.text = "Atomic Mass: 6.941 u"
-        descTextView.text = "DESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two.\n\nDESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two.\n\nDESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two."
+        imageView.image = UIImage(named: selectedItems!)
+        let materialsData = MaterialData().materials
+        let filtered = materialsData.filter { $0.key == selectedItems! }
+        if filtered.count > 0 {
+            let mat = filtered[0]
+            nameLabel.text = mat.name
+            symbolLabel.text = "Symbol: \(mat.symbol)"
+            atomicNumLabel.text = "Atomic Number: \(mat.atomicNumber)"
+            atomicMassLabel.text = "Atomic Mass: \(mat.atomicMass)"
+            descTextView.text = mat.desccription
+        }
     }
     
     @objc func close(sender: UIButton) {
@@ -209,9 +215,10 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let inventoryName = inventory[indexPath.item]
         if inventoryName != "" {
-            self.imageView.image = UIImage(named: inventoryName)
-            self.selectedItems = inventoryName
-            self.collectionView.reloadData()
+            imageView.image = UIImage(named: inventoryName)
+            selectedItems = inventoryName
+            selectItem()
+            collectionView.reloadData()
         }
     }
 }

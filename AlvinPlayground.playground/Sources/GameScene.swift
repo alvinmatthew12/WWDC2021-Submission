@@ -3,10 +3,12 @@ import SpriteKit
 
 public class GameScene: SKScene, SKPhysicsContactDelegate {
 
-    let player = Player()
+    let player = PlayerNode()
     var inventoryView: InventoryView?
-    var gold: Material?
-    var lithium: Material?
+    var gold: MaterialNode?
+    var lithium: MaterialNode?
+    var aluminium: MaterialNode?
+    var cobalt: MaterialNode?
     var sceneSize: CGSize
     
     var inventory: [String] = []
@@ -27,8 +29,8 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = CGVector(dx: 0, dy: -5.0)
         physicsWorld.contactDelegate = self
         
-        self.addChild(Floor(size: sceneSize))
-        self.addChild(Ceiling(size: sceneSize))
+        self.addChild(FloorNode(size: sceneSize))
+        self.addChild(CeilingNode(size: sceneSize))
         self.addChild(player)
         setupStones()
         setupInventoryButton()
@@ -37,19 +39,34 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupStones() {
         let initialY: CGFloat = (self.view?.bounds.height)!
         
-        lithium = Material(
+        lithium = MaterialNode(
             nodeName: "Lithium",
             size: CGSize(width: 65, height: 65),
             position: CGPoint(x: 100, y: initialY - (65 / 2))
         )
         self.addChild(lithium!)
         
-        gold = Material(
+        gold = MaterialNode(
             nodeName: "Gold",
             size: CGSize(width: 85, height: 60),
             position: CGPoint(x: (frame.size.width / 2) - 30, y: initialY - (60 / 2) + 10)
         )
         self.addChild(gold!)
+        
+        aluminium = MaterialNode(
+            nodeName: "Aluminium",
+            size: CGSize(width: 85, height: 60),
+            position: CGPoint(x: (frame.size.width / 2) + 100, y: (60 / 2) + 150),
+            physicBody: false
+        )
+        self.addChild(aluminium!)
+        
+        cobalt = MaterialNode(
+            nodeName: "Cobalt",
+            size: CGSize(width: 60, height: 65),
+            position: CGPoint(x: frame.size.width - 100, y: initialY - (65 / 2))
+        )
+        self.addChild(cobalt!)
     }
     
     func setupInventoryButton() {
@@ -101,13 +118,19 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
             if ((node.name?.contains("Gold")) == true) {
                 gold?.hitWithPickaxed()
             }
+            if ((node.name?.contains("Aluminium")) == true) {
+                aluminium?.hitWithPickaxed()
+            }
+            if ((node.name?.contains("Cobalt")) == true) {
+                cobalt?.hitWithPickaxed()
+            }
         }
     }
     
     public func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.node?.name == "Player" && ((contact.bodyB.node?.name?.contains("Material")) != nil) {
+        if contact.bodyA.node?.name == "Player" && ((contact.bodyB.node?.name?.contains("Material")) == true) {
             collisionBetween(player: contact.bodyA.node!, stone: contact.bodyB.node!)
-        } else if contact.bodyB.node?.name == "Player" && ((contact.bodyA.node?.name?.contains("Material")) != nil){
+        } else if contact.bodyB.node?.name == "Player" && ((contact.bodyA.node?.name?.contains("Material")) == true){
             collisionBetween(player: contact.bodyB.node!, stone: contact.bodyA.node!)
         }
     }
@@ -118,3 +141,4 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
         self.player.jumpPlayer()
     }
 }
+

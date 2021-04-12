@@ -1,7 +1,7 @@
 import Foundation
 import SpriteKit
 
-public class Ceiling: SKNode {
+public class CeilingNode: SKNode {
     
     public init(size: CGSize) {
         super.init()
