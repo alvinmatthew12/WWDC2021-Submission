@@ -3,8 +3,9 @@ import SpriteKit
 
 public class GameScene: SKScene, SKPhysicsContactDelegate {
 
-    let player = PlayerNode()
+    var player: PlayerNode!
     var inventoryView: InventoryView?
+    var door: DoorNode?
     var gold: MaterialNode?
     var lithium: MaterialNode?
     var aluminium: MaterialNode?
@@ -13,6 +14,9 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var inventory: [String] = []
     var isInventoryOpen: Bool = false
+    
+    var level = 1
+    var totalRaws = 0
     
     public override init(size: CGSize) {
         sceneSize = size
@@ -29,44 +33,55 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = CGVector(dx: 0, dy: -5.0)
         physicsWorld.contactDelegate = self
         
+        door = DoorNode(size: CGSize(width: 130, height: 100), sceneSize: sceneSize)
+        
         self.addChild(FloorNode(size: sceneSize))
         self.addChild(CeilingNode(size: sceneSize))
-        self.addChild(player)
-        setupStones()
+        
+        setupLevel()
         setupInventoryButton()
     }
     
-    func setupStones() {
+    func setupLevel() {
+        print(level)
+        
+        door?.removeFromParent()
+        player = PlayerNode()
+        self.addChild(player)
+        
         let initialY: CGFloat = (self.view?.bounds.height)!
         
-        lithium = MaterialNode(
-            nodeName: "Lithium",
-            size: CGSize(width: 65, height: 65),
-            position: CGPoint(x: 100, y: initialY - (65 / 2))
-        )
-        self.addChild(lithium!)
-        
-        gold = MaterialNode(
-            nodeName: "Gold",
-            size: CGSize(width: 85, height: 60),
-            position: CGPoint(x: (frame.size.width / 2) - 30, y: initialY - (60 / 2) + 10)
-        )
-        self.addChild(gold!)
-        
-        aluminium = MaterialNode(
-            nodeName: "Aluminium",
-            size: CGSize(width: 85, height: 60),
-            position: CGPoint(x: (frame.size.width / 2) + 100, y: (60 / 2) + 150),
-            physicBody: false
-        )
-        self.addChild(aluminium!)
-        
-        cobalt = MaterialNode(
-            nodeName: "Cobalt",
-            size: CGSize(width: 60, height: 65),
-            position: CGPoint(x: frame.size.width - 100, y: initialY - (65 / 2))
-        )
-        self.addChild(cobalt!)
+        if level == 1 {
+            totalRaws = 4
+            lithium = MaterialNode(
+                nodeName: "Lithium",
+                size: CGSize(width: 65, height: 65),
+                position: CGPoint(x: 100, y: initialY - (65 / 2))
+            )
+            self.addChild(lithium!)
+            
+            gold = MaterialNode(
+                nodeName: "Gold",
+                size: CGSize(width: 85, height: 60),
+                position: CGPoint(x: (frame.size.width / 2) - 30, y: initialY - (60 / 2) + 10)
+            )
+            self.addChild(gold!)
+            
+            aluminium = MaterialNode(
+                nodeName: "Aluminium",
+                size: CGSize(width: 85, height: 60),
+                position: CGPoint(x: (frame.size.width / 2) + 100, y: (60 / 2) + 140),
+                physicBody: false
+            )
+            self.addChild(aluminium!)
+            
+            cobalt = MaterialNode(
+                nodeName: "Cobalt",
+                size: CGSize(width: 60, height: 65),
+                position: CGPoint(x: frame.size.width - 140, y: initialY - (65 / 2))
+            )
+            self.addChild(cobalt!)
+        }
     }
     
     func setupInventoryButton() {
@@ -129,16 +144,33 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     
     public func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node?.name == "Player" && ((contact.bodyB.node?.name?.contains("Material")) == true) {
-            collisionBetween(player: contact.bodyA.node!, stone: contact.bodyB.node!)
+            collisionBetween(player: contact.bodyA.node!, material: contact.bodyB.node!)
         } else if contact.bodyB.node?.name == "Player" && ((contact.bodyA.node?.name?.contains("Material")) == true){
-            collisionBetween(player: contact.bodyB.node!, stone: contact.bodyA.node!)
+            collisionBetween(player: contact.bodyB.node!, material: contact.bodyA.node!)
+        }
+        
+        if contact.bodyA.node?.name == "Player" && ((contact.bodyB.node?.name?.contains("Door")) == true) {
+            collisionBetween(player: contact.bodyA.node!, door: contact.bodyB.node!)
+        } else if contact.bodyB.node?.name == "Player" && ((contact.bodyA.node?.name?.contains("Door")) == true){
+            collisionBetween(player: contact.bodyB.node!, door: contact.bodyA.node!)
         }
     }
     
-    func collisionBetween(player: SKNode, stone: SKNode) {
-        stone.removeFromParent()
-        inventory.append(stone.name!)
+    func collisionBetween(player: SKNode, material: SKNode) {
+        material.removeFromParent()
+        inventory.append(material.name!)
         self.player.jumpPlayer()
+        
+        totalRaws -= 1
+        if totalRaws == 0 {
+            self.addChild(door!)
+        }
+    }
+    
+    func collisionBetween(player: SKNode, door: SKNode) {
+        player.removeFromParent()
+        level += 1
+        setupLevel()
     }
 }
 

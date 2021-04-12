@@ -14,6 +14,7 @@ public class PlayerNode: SKNode {
         player.position = CGPoint(x: 100, y: 100)
         player.size = CGSize(width: 50, height: 50)
         player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
+        player.physicsBody?.allowsRotation = false
         player.physicsBody?.affectedByGravity = true
         player.physicsBody!.contactTestBitMask = player.physicsBody!.collisionBitMask
         player.zPosition = 15
