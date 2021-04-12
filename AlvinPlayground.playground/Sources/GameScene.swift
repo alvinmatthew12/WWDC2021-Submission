@@ -149,6 +149,10 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
     var imageViewContainer = UIView()
     var imageView = UIImageView()
     var shortDescContainer = UIView()
+    var nameLabel = UILabel()
+    var symbolLabel = UILabel()
+    var atomicNumLabel = UILabel()
+    var atomicMassLabel = UILabel()
     var descTextView = UITextView()
     var collectionView: UICollectionView!
     
@@ -164,9 +168,6 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
                 inventory.append("")
             }
         }
-        
-        imageView.image = UIImage(named: inventory[0])
-        selectedItems = inventory[0]
         
         self.backgroundColor = .white
         self.layer.masksToBounds = true
@@ -193,7 +194,7 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
         
-        collectionViewContainer.backgroundColor = .gray
+        collectionViewContainer.backgroundColor = .lightGray
         self.addSubview(collectionViewContainer)
         collectionViewContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: 56).isActive = true
         collectionViewContainer.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
@@ -201,7 +202,7 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
         collectionViewContainer.heightAnchor.constraint(equalToConstant: 320).isActive = true
         collectionViewContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        imageViewContainer.backgroundColor = .gray
+        imageViewContainer.backgroundColor = .lightGray
         self.addSubview(imageViewContainer)
         imageViewContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: 56).isActive = true
         imageViewContainer.leadingAnchor.constraint(equalTo: collectionViewContainer.trailingAnchor, constant: 20).isActive = true
@@ -217,16 +218,49 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
         imageView.bottomAnchor.constraint(equalTo: imageViewContainer.bottomAnchor, constant: -5).isActive = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        shortDescContainer.backgroundColor = .gray
+        shortDescContainer.backgroundColor = .white
         self.addSubview(shortDescContainer)
         shortDescContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: 56).isActive = true
-        shortDescContainer.leadingAnchor.constraint(equalTo: imageViewContainer.trailingAnchor, constant: 20).isActive = true
+        shortDescContainer.leadingAnchor.constraint(equalTo: imageViewContainer.trailingAnchor, constant: 15).isActive = true
         shortDescContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         shortDescContainer.widthAnchor.constraint(equalToConstant: 220).isActive = true
         shortDescContainer.heightAnchor.constraint(equalToConstant: 80).isActive = true
         shortDescContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        descTextView.backgroundColor = .gray
+        nameLabel.textColor = .black
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        self.addSubview(nameLabel)
+        nameLabel.topAnchor.constraint(equalTo: shortDescContainer.topAnchor).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: shortDescContainer.leadingAnchor).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: shortDescContainer.trailingAnchor).isActive = true
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        symbolLabel.textColor = .black
+        symbolLabel.font = UIFont.systemFont(ofSize: 13)
+        self.addSubview(symbolLabel)
+        symbolLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 3).isActive = true
+        symbolLabel.leadingAnchor.constraint(equalTo: shortDescContainer.leadingAnchor).isActive = true
+        symbolLabel.trailingAnchor.constraint(equalTo: shortDescContainer.trailingAnchor).isActive = true
+        symbolLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        atomicNumLabel.textColor = .black
+        atomicNumLabel.font = UIFont.systemFont(ofSize: 13)
+        self.addSubview(atomicNumLabel)
+        atomicNumLabel.topAnchor.constraint(equalTo: symbolLabel.bottomAnchor, constant: 3).isActive = true
+        atomicNumLabel.leadingAnchor.constraint(equalTo: shortDescContainer.leadingAnchor).isActive = true
+        atomicNumLabel.trailingAnchor.constraint(equalTo: shortDescContainer.trailingAnchor).isActive = true
+        atomicNumLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        atomicMassLabel.textColor = .black
+        atomicMassLabel.font = UIFont.systemFont(ofSize: 13)
+        self.addSubview(atomicMassLabel)
+        atomicMassLabel.topAnchor.constraint(equalTo: atomicNumLabel.bottomAnchor, constant: 3).isActive = true
+        atomicMassLabel.leadingAnchor.constraint(equalTo: shortDescContainer.leadingAnchor).isActive = true
+        atomicMassLabel.trailingAnchor.constraint(equalTo: shortDescContainer.trailingAnchor).isActive = true
+        atomicMassLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        descTextView.backgroundColor = .lightGray
+        descTextView.isEditable = false
         self.addSubview(descTextView)
         descTextView.topAnchor.constraint(equalTo: imageViewContainer.bottomAnchor, constant: 20).isActive = true
         descTextView.leadingAnchor.constraint(equalTo: collectionViewContainer.trailingAnchor, constant: 20).isActive = true
@@ -235,7 +269,19 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
         descTextView.heightAnchor.constraint(equalToConstant: 220).isActive = true
         descTextView.translatesAutoresizingMaskIntoConstraints = false
         
+        selectedItems = inventory[0]
+        selectItem()
+        
         setupCollectionView()
+    }
+    
+    func selectItem() {
+        imageView.image = UIImage(named: inventory[0])
+        nameLabel.text = "Lithium"
+        symbolLabel.text = "Symbol: Li"
+        atomicNumLabel.text = "Atomic Number: 3"
+        atomicMassLabel.text = "Atomic Mass: 6.941 u"
+        descTextView.text = "DESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two.\n\nDESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two.\n\nDESCRIPTION\n\nLithium is also the first of the alkali metals - like its near kin sodium and potassium, it will react spontaneously to water, though not quite as violently as those other two."
     }
     
     @objc func close(sender: UIButton) {
@@ -272,7 +318,7 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! InventoryCollectionViewCell
-        cell.backgroundColor = .gray
+        cell.backgroundColor = .lightGray
         
         let inventoryName = inventory[indexPath.item]
         cell.imageView?.image = UIImage(named: inventoryName)
