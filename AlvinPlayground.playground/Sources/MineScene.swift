@@ -1,7 +1,7 @@
 import Foundation
 import SpriteKit
 
-public class GameScene: SKScene, SKPhysicsContactDelegate {
+public class MineScene: SKScene, SKPhysicsContactDelegate {
 
     var player: PlayerNode!
     var inventoryView: InventoryView?
