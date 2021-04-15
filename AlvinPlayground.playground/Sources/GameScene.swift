@@ -10,12 +10,17 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     var lithium: MaterialNode?
     var aluminium: MaterialNode?
     var cobalt: MaterialNode?
-    var sceneSize: CGSize
+    var silver: MaterialNode?
+    var plastic: MaterialNode?
+    var copper: MaterialNode?
+    var lead: MaterialNode?
+    var nickel: MaterialNode?
     
+    var sceneSize: CGSize
     var inventory: [String] = []
     var isInventoryOpen: Bool = false
     
-    var level = 1
+    var level = 2
     var totalRaws = 0
     
     public override init(size: CGSize) {
@@ -79,6 +84,46 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
                 position: CGPoint(x: frame.size.width - 140, y: initialY - (65 / 2))
             )
             self.addChild(cobalt!)
+            
+        } else if level == 2 {
+            totalRaws = 5
+            silver = MaterialNode(
+                nodeName: "Silver",
+                size: CGSize(width: 85, height: 60),
+                position: CGPoint(x: 100, y: initialY - (60 / 2))
+            )
+            self.addChild(silver!)
+            
+            plastic = MaterialNode(
+                nodeName: "Plastic",
+                size: CGSize(width: 30, height: 20),
+                position: CGPoint(x: 200, y: (20 / 2) + 100),
+                physicBody: false,
+                skipRaw: true
+            )
+            self.addChild(plastic!)
+            
+            copper = MaterialNode(
+                nodeName: "Copper",
+                size: CGSize(width: 85, height: 60),
+                position: CGPoint(x: (frame.size.width / 2) + 100, y: (60 / 2) + 125),
+                physicBody: false
+            )
+            self.addChild(copper!)
+            
+            lead = MaterialNode(
+                nodeName: "Lead",
+                size: CGSize(width: 85, height: 60),
+                position: CGPoint(x: (frame.size.width / 2) - 30, y: initialY - (60 / 2) + 10)
+            )
+            self.addChild(lead!)
+            
+            nickel = MaterialNode(
+                nodeName: "Nickel",
+                size: CGSize(width: 60, height: 65),
+                position: CGPoint(x: frame.size.width - 140, y: initialY - (65 / 2))
+            )
+            self.addChild(nickel!)
         }
     }
     
@@ -142,6 +187,18 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             if ((node.name?.contains("Cobalt")) == true) {
                 cobalt?.hitWithPickaxed()
+            }
+            if ((node.name?.contains("Silver")) == true) {
+                silver?.hitWithPickaxed()
+            }
+            if ((node.name?.contains("Copper")) == true) {
+                copper?.hitWithPickaxed()
+            }
+            if ((node.name?.contains("Lead")) == true) {
+                lead?.hitWithPickaxed()
+            }
+            if ((node.name?.contains("Nickel")) == true) {
+                nickel?.hitWithPickaxed()
             }
         }
     }

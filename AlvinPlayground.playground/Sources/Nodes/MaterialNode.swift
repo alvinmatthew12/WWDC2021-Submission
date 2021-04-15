@@ -9,7 +9,7 @@ public class MaterialNode: SKNode {
     private var indicator = SKShapeNode()
     private var nodeName: String = ""
     
-    public init(nodeName: String, size: CGSize, position: CGPoint, physicBody: Bool = true) {
+    public init(nodeName: String, size: CGSize, position: CGPoint, physicBody: Bool = true, skipRaw: Bool = false) {
         super.init()
         
         self.nodeName = nodeName
@@ -45,6 +45,11 @@ public class MaterialNode: SKNode {
         indicator.zPosition = 2
         indicator.alpha = 0.7
         addChild(indicator)
+        
+        if skipRaw {
+            indicator.removeFromParent()
+            transformToMaterial()
+        }
     }
     
     public required init?(coder aDecoder: NSCoder) {
