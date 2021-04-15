@@ -20,7 +20,7 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     var inventory: [String] = []
     var isInventoryOpen: Bool = false
     
-    var level = 2
+    var level = 1
     var totalRaws = 0
     
     public override init(size: CGSize) {
