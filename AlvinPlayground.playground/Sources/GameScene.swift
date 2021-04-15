@@ -43,8 +43,6 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupLevel() {
-        print(level)
-        
         door?.removeFromParent()
         player = PlayerNode()
         self.addChild(player)
@@ -118,8 +116,14 @@ public class GameScene: SKScene, SKPhysicsContactDelegate {
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self)
+        let touchedNode = self.nodes(at: location)
         
         if inventoryView == nil || inventoryView?.isDescendant(of: self.view!) == false {
+            for node in touchedNode {
+                if ((node.name?.contains("Raw")) == true) {
+                    return
+                }
+            }
             player.movePlayer(location, frame)
         }
     }
