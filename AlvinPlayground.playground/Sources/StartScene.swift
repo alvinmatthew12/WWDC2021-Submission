@@ -7,8 +7,12 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
     var background = SKSpriteNode(imageNamed: "OutsideBG")
     var player = PlayerNode()
     var scientist = ScientistNode()
+    var dialogView = DialogView()
+    var startButton = UIButton()
     
     var sceneSize: CGSize
+    var isCanMove = false
+    var dialogId = 0
     
     public override init(size: CGSize) {
         sceneSize = size
@@ -35,12 +39,67 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
         scientist.position = CGPoint(x: 250, y: 100)
         scientist.xScale = -1
         self.addChild(scientist)
+        
+        startButton = UIButton(frame: CGRect(x: 0, y: 0, width: 180, height: 75))
+        startButton.center = self.view!.center
+        startButton.center.y = self.view!.center.y - 30
+        startButton.setTitle("START", for: .normal)
+        startButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+        startButton.titleLabel?.textColor = .white
+        startButton.backgroundColor = .systemYellow
+        startButton.layer.masksToBounds = true
+        startButton.layer.borderColor = UIColor.white.cgColor
+        startButton.layer.borderWidth = 2.0
+        startButton.layer.cornerRadius = 10
+        startButton.addTarget(self, action: #selector(startButtonAction), for: .touchUpInside)
+        self.view?.addSubview(startButton)
+    }
+    
+    @objc func startButtonAction(sender : UIButton) {
+        startButton.removeFromSuperview()
+        setupDialog()
+    }
+    
+    func setupDialog() {
+        dialogView.center = self.view!.center
+        dialogView.isUserInteractionEnabled = true
+        self.view?.addSubview(dialogView)
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(touchDialogView))
+        dialogView.addGestureRecognizer(tap)
+        emitDialogs()
+    }
+    
+    @objc func touchDialogView() {
+        emitDialogs()
+    }
+    
+    func emitDialogs() {
+        dialogId += 1
+        if dialogId <= 4 {
+            let dialogData = DialogData().dialogs
+            let filtered = dialogData.filter { $0.id == dialogId }
+            if filtered.count > 0 {
+                dialogView.dialogLabel.text = filtered[0].dialog
+                dialogView.speaker1.text = filtered[0].speaker1
+                dialogView.speaker2.text = filtered[0].speaker2
+                dialogView.imageView1.image = UIImage(named: filtered[0].imageName1)
+                dialogView.imageView2.image = UIImage(named: filtered[0].imageName2)
+            }
+        } else {
+            dialogView.removeFromSuperview()
+            isCanMove = true
+        }
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self)
-        player.movePlayer(location, frame)
+        if dialogView.isDescendant(of: self.view!) {
+            emitDialogs()
+        }
+        if isCanMove {
+            player.movePlayer(location, frame)
+        }
     }
     
     public func didBegin(_ contact: SKPhysicsContact) {
