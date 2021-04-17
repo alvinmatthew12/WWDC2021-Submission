@@ -231,7 +231,13 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
     func collisionBetween(player: SKNode, door: SKNode) {
         player.removeFromParent()
         level += 1
-        setupLevel()
+        if level > 2 {
+            let scene = EndScene(size: self.frame.size, inventory: self.inventory)
+            let transition:SKTransition = SKTransition.fade(withDuration: 1)
+            self.view?.presentScene(scene, transition: transition)
+        } else {
+            setupLevel()
+        }
     }
 }
 

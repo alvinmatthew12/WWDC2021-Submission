@@ -225,7 +225,6 @@ public class InventoryView: UIView, UICollectionViewDataSource, UICollectionView
 
 public class InventoryCollectionViewCell: UICollectionViewCell {
     var imageView: UIImageView?
-    var label: UILabel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)

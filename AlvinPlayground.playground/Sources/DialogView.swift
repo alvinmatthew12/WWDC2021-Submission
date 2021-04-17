@@ -13,6 +13,7 @@ public class DialogView: UIView {
         
         self.frame = CGRect(x: 0, y: 0, width: 500, height: 350)
         
+        imageView1.contentMode = .scaleAspectFit
         self.addSubview(imageView1)
         imageView1.widthAnchor.constraint(equalToConstant: 200).isActive = true
         imageView1.heightAnchor.constraint(equalToConstant: 200).isActive = true
@@ -20,6 +21,7 @@ public class DialogView: UIView {
         imageView1.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         imageView1.translatesAutoresizingMaskIntoConstraints = false
         
+        imageView2.contentMode = .scaleAspectFit
         imageView2.transform = CGAffineTransform(scaleX: -1, y: 1)
         self.addSubview(imageView2)
         imageView2.widthAnchor.constraint(equalToConstant: 200).isActive = true
