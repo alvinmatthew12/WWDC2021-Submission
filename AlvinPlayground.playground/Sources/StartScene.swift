@@ -139,7 +139,9 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
     
     func collisionBetween(player: SKNode, door: SKNode) {
         player.removeFromParent()
-        matListButton?.removeFromSuperview()
+        for view in self.view!.subviews {
+            view.removeFromSuperview()
+        }
         let scene = MineScene(size: self.frame.size)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         self.view?.presentScene(scene, transition: transition)

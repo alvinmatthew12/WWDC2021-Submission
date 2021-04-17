@@ -255,6 +255,9 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         player.removeFromParent()
         level += 1
         if level > 2 {
+            for view in self.view!.subviews {
+                view.removeFromSuperview()
+            }
             let scene = EndScene(size: self.frame.size, inventory: self.inventory)
             let transition:SKTransition = SKTransition.fade(withDuration: 1)
             self.view?.presentScene(scene, transition: transition)

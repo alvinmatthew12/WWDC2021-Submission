@@ -2,13 +2,14 @@ import PlaygroundSupport
 import Foundation
 import SpriteKit
 
-public class EndScene: SKScene, SKPhysicsContactDelegate {
+public class EndScene: SKScene, SKPhysicsContactDelegate, MachineProtocol {
     
     var background = SKSpriteNode(imageNamed: "OutsideBG")
     var player = PlayerNode()
     var scientist = ScientistNode(physicBody: true)
     var dialogView = DialogView()
     var inventoryView: InventoryView?
+    var inventoryButton: InventoryImageButton?
     var machineView: MachineView?
     var matListView = MaterialListView()
     var matListButton: MaterialListImageButton?
@@ -51,9 +52,9 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupInventoryButton() {
-        let inventoryButton = InventoryImageButton(frame: CGRect(x: 20, y: (self.view?.frame.height)! - 60, width: 40, height: 40))
-        inventoryButton.addTarget(self, action: #selector(inventoryButtonAction), for: .touchUpInside)
-        self.view?.addSubview(inventoryButton)
+        inventoryButton = InventoryImageButton(frame: CGRect(x: 20, y: (self.view?.frame.height)! - 60, width: 40, height: 40))
+        inventoryButton!.addTarget(self, action: #selector(inventoryButtonAction), for: .touchUpInside)
+        self.view?.addSubview(inventoryButton!)
     }
     
     @objc func inventoryButtonAction(sender : UIButton) {
@@ -95,8 +96,19 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
     func setupMachine() {
         machineView = MachineView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 500, height: 400), pInventory: inventory)
         machineView?.center = self.view!.center
+        machineView?.delegate = self
         self.view?.addSubview(machineView!)
     }
+    
+    func constructionFinish() {
+        for view in self.view!.subviews {
+            view.removeFromSuperview()
+        }
+        let scene = ResultScene(size: self.frame.size)
+        let transition:SKTransition = SKTransition.fade(withDuration: 1)
+        self.view?.presentScene(scene, transition: transition)
+    }
+    
     
     func setupDialog() {
         isCanMove = false

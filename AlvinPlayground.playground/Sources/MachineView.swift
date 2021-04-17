@@ -1,6 +1,8 @@
 import UIKit
 
-// MARK:- InventoryView
+protocol MachineProtocol {
+    func constructionFinish()
+}
 
 public class MachineView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -30,6 +32,8 @@ public class MachineView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let plasticItem = MachineItemView(name: "Plastic", imageName: "PlasticMaterial")
     
     var itemReady: Int = 0
+    
+    var delegate: MachineProtocol?
     
     public init(frame: CGRect, pInventory: [String]) {
         super.init(frame: frame)
@@ -404,6 +408,10 @@ public class MachineView: UIView, UICollectionViewDataSource, UICollectionViewDe
         loadingLabel.centerXAnchor.constraint(equalTo: loadingContainer.centerXAnchor).isActive = true
         loadingLabel.centerYAnchor.constraint(equalTo: loadingContainer.centerYAnchor).isActive = true
         loadingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.delegate?.constructionFinish()
+        }
     }
     
 }
