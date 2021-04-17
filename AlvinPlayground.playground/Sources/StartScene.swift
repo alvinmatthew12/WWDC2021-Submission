@@ -9,6 +9,8 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
     var scientist = ScientistNode()
     var dialogView = DialogView()
     var startButton = UIButton()
+    var matListView = MaterialListView()
+    var matListButton: MaterialListImageButton?
     
     var sceneSize: CGSize
     var isCanMove = false
@@ -88,7 +90,30 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
         } else {
             dialogView.removeFromSuperview()
             isCanMove = true
+            setupMatListButton()
+            setupMatList()
         }
+    }
+    
+    func setupMatListButton() {
+        matListButton = MaterialListImageButton(frame: CGRect(x: 20, y: (self.view?.frame.height)! - 60, width: 40, height: 40))
+        matListButton!.addTarget(self, action: #selector(matListButtonAction), for: .touchUpInside)
+        self.view?.addSubview(matListButton!)
+    }
+    
+    
+    @objc func matListButtonAction(sender : UIButton) {
+        if matListView.isDescendant(of: self.view!) == true {
+            matListView.removeFromSuperview()
+        } else {
+            setupMatList()
+        }
+    }
+    
+    func setupMatList() {
+        matListView = MaterialListView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 300, height: 400))
+        matListView.center = self.view!.center
+        self.view?.addSubview(matListView)
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -97,8 +122,10 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
         if dialogView.isDescendant(of: self.view!) {
             emitDialogs()
         }
-        if isCanMove {
-            player.movePlayer(location, frame)
+        if isCanMove && !matListView.isDescendant(of: self.view!) {
+            if matListView.isDescendant(of: self.view!) == false {
+                player.movePlayer(location, frame)
+            }
         }
     }
     
@@ -112,6 +139,7 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
     
     func collisionBetween(player: SKNode, door: SKNode) {
         player.removeFromParent()
+        matListButton?.removeFromSuperview()
         let scene = MineScene(size: self.frame.size)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         self.view?.presentScene(scene, transition: transition)

@@ -4,7 +4,7 @@ import PlaygroundSupport
 import SpriteKit
 
 let sceneView = SKView(frame: CGRect(x:0 , y:0, width: 640, height: 480))
-let scene = MineScene(size: sceneView.frame.size)
+let scene = StartScene(size: sceneView.frame.size)
 sceneView.ignoresSiblingOrder = true
 sceneView.showsFPS = true
 sceneView.showsNodeCount = true

@@ -10,13 +10,14 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
     var dialogView = DialogView()
     var inventoryView: InventoryView?
     var machineView: MachineView?
+    var matListView = MaterialListView()
+    var matListButton: MaterialListImageButton?
     
     var sceneSize: CGSize
     var isCanMove = true
     var dialogId = 4
     
     var inventory: [String] = []
-    var isInventoryOpen: Bool = false
     
     public init(size: CGSize, inventory: [String] = []) {
         self.inventory = inventory
@@ -46,6 +47,7 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(scientist)
         
         setupInventoryButton()
+        setupMatListButton()
     }
     
     func setupInventoryButton() {
@@ -57,10 +59,8 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
     @objc func inventoryButtonAction(sender : UIButton) {
         if inventoryView?.isDescendant(of: self.view!) == true {
             inventoryView?.removeFromSuperview()
-            isInventoryOpen = false
         } else {
             setupInventory()
-            isInventoryOpen = true
         }
     }
     
@@ -68,6 +68,28 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
         inventoryView = InventoryView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 500, height: 400), pInventory: inventory)
         inventoryView?.center = self.view!.center
         self.view?.addSubview(inventoryView!)
+    }
+    
+    
+    func setupMatListButton() {
+        matListButton = MaterialListImageButton(frame: CGRect(x: 80, y: (self.view?.frame.height)! - 60, width: 40, height: 40))
+        matListButton!.addTarget(self, action: #selector(matListButtonAction), for: .touchUpInside)
+        self.view?.addSubview(matListButton!)
+    }
+    
+    
+    @objc func matListButtonAction(sender : UIButton) {
+        if matListView.isDescendant(of: self.view!) == true {
+            matListView.removeFromSuperview()
+        } else {
+            setupMatList()
+        }
+    }
+    
+    func setupMatList() {
+        matListView = MaterialListView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 300, height: 400))
+        matListView.center = self.view!.center
+        self.view?.addSubview(matListView)
     }
     
     func setupMachine() {
@@ -116,7 +138,7 @@ public class EndScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if inventoryView == nil || inventoryView?.isDescendant(of: self.view!) == false {
-            if isCanMove {
+            if isCanMove && !matListView.isDescendant(of: self.view!) {
                 player.movePlayer(location, frame)
             }
         }

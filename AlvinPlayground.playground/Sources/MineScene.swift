@@ -15,10 +15,11 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
     var copper: MaterialNode?
     var lead: MaterialNode?
     var nickel: MaterialNode?
+    var matListView = MaterialListView()
+    var matListButton: MaterialListImageButton?
     
     var sceneSize: CGSize
     var inventory: [String] = []
-    var isInventoryOpen: Bool = false
     
     var level = 1
     var totalRaws = 0
@@ -45,6 +46,7 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         
         setupLevel()
         setupInventoryButton()
+        setupMatListButton()
     }
     
     func setupLevel() {
@@ -136,10 +138,8 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
     @objc func inventoryButtonAction(sender : UIButton) {
         if inventoryView?.isDescendant(of: self.view!) == true {
             inventoryView?.removeFromSuperview()
-            isInventoryOpen = false
         } else {
             setupInventory()
-            isInventoryOpen = true
         }
     }
     
@@ -147,6 +147,27 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         inventoryView = InventoryView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 500, height: 400), pInventory: inventory)
         inventoryView?.center = self.view!.center
         self.view?.addSubview(inventoryView!)
+    }
+    
+    func setupMatListButton() {
+        matListButton = MaterialListImageButton(frame: CGRect(x: 80, y: (self.view?.frame.height)! - 60, width: 40, height: 40))
+        matListButton!.addTarget(self, action: #selector(matListButtonAction), for: .touchUpInside)
+        self.view?.addSubview(matListButton!)
+    }
+    
+    
+    @objc func matListButtonAction(sender : UIButton) {
+        if matListView.isDescendant(of: self.view!) == true {
+            matListView.removeFromSuperview()
+        } else {
+            setupMatList()
+        }
+    }
+    
+    func setupMatList() {
+        matListView = MaterialListView(frame: CGRect(x: (self.view?.bounds.midX)!, y: (self.view?.bounds.midX)!, width: 300, height: 400))
+        matListView.center = self.view!.center
+        self.view?.addSubview(matListView)
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -164,12 +185,14 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         let touchedNode = self.nodes(at: location)
         
         if inventoryView == nil || inventoryView?.isDescendant(of: self.view!) == false {
-            for node in touchedNode {
-                if ((node.name?.contains("Raw")) == true) {
-                    return
+            if  !matListView.isDescendant(of: self.view!) {
+                for node in touchedNode {
+                    if ((node.name?.contains("Raw")) == true) {
+                        return
+                    }
                 }
+                player.movePlayer(location, frame)
             }
-            player.movePlayer(location, frame)
         }
     }
     
