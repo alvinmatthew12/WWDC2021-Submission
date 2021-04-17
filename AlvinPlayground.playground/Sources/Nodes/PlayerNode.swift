@@ -52,6 +52,7 @@ public class PlayerNode: SKNode {
     }
     
     public func jumpPlayer() {
+        player.removeAllActions()
         animatePlayerJump()
     }
 
