@@ -54,7 +54,10 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
         startButton.layer.borderWidth = 2.0
         startButton.layer.cornerRadius = 10
         startButton.addTarget(self, action: #selector(startButtonAction), for: .touchUpInside)
-        self.view?.addSubview(startButton)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.view?.addSubview(self.startButton)
+        }
     }
     
     @objc func startButtonAction(sender : UIButton) {

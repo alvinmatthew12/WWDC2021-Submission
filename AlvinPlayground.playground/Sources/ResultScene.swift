@@ -51,12 +51,38 @@ public class ResultScene: SKScene {
             descLabel.numberOfLines = 0
             descLabel.textAlignment = .justified
             descLabel.font = UIFont.systemFont(ofSize: 14)
-            descLabel.text = "Mobile phone is a wireless handheld device that allows users to make and receive calls. While the earliest generation of mobile phones could only make and receive calls, today’s mobile phones do a lot more, accommodating web browsers, games, cameras, video players, navigational systems and social media. \n\nMobile phone has become basic human need that almost everyone has. Various people use mobile phone to communicate and exchange information. Therefore, as the users, we must be wise in using it. For example, instead of spreading hate or false information, we can use it to broaden our knowledge and connection, hone skills and develop ourselves. \n\nBe Wise."
+            descLabel.text = "Mobile phone is a wireless handheld device that allows users to make and receive calls. While the earliest generation of mobile phones could only make and receive calls, today’s mobile phones do a lot more, accommodating web browsers, games, cameras, video players, navigational systems and social media. \n\nMobile phone has become basic human need that almost everyone has. Various people use mobile phone to communicate and exchange information. Therefore, as the users, we must be wise in using it. For example, instead of spreading hate or false information, we can use it to broaden our knowledge and connection, hone skills and develop ourselves."
             self.view?.addSubview(descLabel)
             descLabel.topAnchor.constraint(equalTo: mobLabel.bottomAnchor, constant: 25).isActive = true
             descLabel.leadingAnchor.constraint(equalTo: phoneImage.trailingAnchor, constant: 25).isActive = true
             descLabel.trailingAnchor.constraint(equalTo: self.view!.trailingAnchor, constant: -25).isActive = true
             descLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            let button = UIButton()
+            button.setTitle("Play Again", for: .normal)
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            button.titleLabel?.textColor = .white
+            button.backgroundColor = .systemYellow
+            button.layer.masksToBounds = true
+            button.layer.borderColor = UIColor.white.cgColor
+            button.layer.borderWidth = 2.0
+            button.layer.cornerRadius = 10
+            button.addTarget(self, action: #selector(self.buttonAction), for: .touchUpInside)
+            self.view?.addSubview(button)
+            button.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 25).isActive = true
+            button.leadingAnchor.constraint(equalTo: phoneImage.trailingAnchor, constant: 25).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 45).isActive = true
+            button.translatesAutoresizingMaskIntoConstraints = false
         }
+    }
+    
+    @objc func buttonAction(sender: UIButton) {
+        for view in self.view!.subviews {
+            view.removeFromSuperview()
+        }
+        let scene = StartScene(size: self.frame.size)
+        let transition:SKTransition = SKTransition.fade(withDuration: 1)
+        self.view?.presentScene(scene, transition: transition)
     }
 }
