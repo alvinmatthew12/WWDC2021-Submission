@@ -81,6 +81,7 @@ public class ResultScene: SKScene {
         for view in self.view!.subviews {
             view.removeFromSuperview()
         }
+        self.view?.stopBgSound()
         let scene = StartScene(size: self.frame.size)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         self.view?.presentScene(scene, transition: transition)

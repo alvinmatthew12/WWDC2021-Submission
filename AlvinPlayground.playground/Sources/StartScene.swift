@@ -63,6 +63,7 @@ public class StartScene: SKScene, SKPhysicsContactDelegate {
     @objc func startButtonAction(sender : UIButton) {
         startButton.removeFromSuperview()
         setupDialog()
+        self.view?.playBgSound()
     }
     
     func setupDialog() {
