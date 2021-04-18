@@ -17,6 +17,8 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
     var nickel: MaterialNode?
     var matListView = MaterialListView()
     var matListButton: MaterialListImageButton?
+    let obtainedLabel = UILabel()
+    var obtainedTimer = Timer()
     
     var sceneSize: CGSize
     var inventory: [String] = []
@@ -47,6 +49,22 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         setupLevel()
         setupInventoryButton()
         setupMatListButton()
+        
+        obtainedLabel.text = "👇🏻 You obtained new material"
+        obtainedLabel.textColor = .white
+        obtainedLabel.isHidden = true
+        self.view?.addSubview(obtainedLabel)
+        obtainedLabel.leadingAnchor.constraint(equalTo: self.view!.leadingAnchor, constant: 25).isActive = true
+        obtainedLabel.bottomAnchor.constraint(equalTo: self.view!.bottomAnchor, constant: -80).isActive = true
+        obtainedLabel.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func showObtainedLabel() {
+        obtainedLabel.isHidden = false
+        obtainedTimer.invalidate()
+        obtainedTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
+            self.obtainedLabel.isHidden = true
+        })
     }
     
     func setupLevel() {
@@ -244,7 +262,7 @@ public class MineScene: SKScene, SKPhysicsContactDelegate {
         material.removeFromParent()
         inventory.append(material.name!)
         self.player.jumpPlayer()
-        
+        showObtainedLabel()
         totalRaws -= 1
         if totalRaws == 0 {
             self.addChild(door!)
